@@ -5,7 +5,7 @@ variable "bq_dataset_id" {
 
 variable "project_id" {
   description = "GCP Project ID"
-  default     = "de-zoomcamp26-487314" # replace with your actual project id from GCP
+  default     = "xxxx-xxxx-xxxx" # replace with your actual project id from GCP
 }
 
 variable "credentials" {
