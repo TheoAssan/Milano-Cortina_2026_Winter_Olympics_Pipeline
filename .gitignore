@@ -4,6 +4,8 @@ __pycache__/
 *$py.class
 *.env
 *keys.json
+logs/
+airflow.cfg
 # C extensions
 *.so
 
