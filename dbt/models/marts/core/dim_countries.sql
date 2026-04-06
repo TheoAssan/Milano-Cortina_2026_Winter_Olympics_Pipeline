@@ -5,8 +5,9 @@ with medallists as (
 countries as (
     select 
         distinct country_code,
-        country 
+        {{gen_country_name(country_code)}}
     from medallists
+    order by country_code asc 
 )
 
 select * from countries 

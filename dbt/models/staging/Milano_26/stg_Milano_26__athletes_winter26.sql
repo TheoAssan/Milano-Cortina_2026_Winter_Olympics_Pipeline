@@ -9,10 +9,10 @@ source as (
 renamed as (
 
     select
-        code,
-        name,
-        gender,
-        country_code,
+        cast(code as integer) as athlete_code,
+        cast(name as string) as athlete_name,
+        upper(cast(gender as string)) as gender,
+        upper(cast(country_code as string)) as country_code,
         flag_bearer,
         events
 

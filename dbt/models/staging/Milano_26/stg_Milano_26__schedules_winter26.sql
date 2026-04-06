@@ -9,13 +9,13 @@ source as (
 renamed as (
 
     select
-        cast(start_date as timestamp) as start_date,
-        cast(end_date as timestamp) as end_date,
+        cast(start_date as timestamp) as event_start,
+        cast(end_date as timestamp) as event_end,
         day,
         status,
         discipline,
         discipline_code,
-        event,
+        cast(event as string) as event_name,
         event_medal,
         phase,
         gender,
