@@ -9,7 +9,8 @@ events as (
         ) }}         AS event_id,
         event_name,
         gender,
-        discipline_code      
+        discipline_code,
+        event_type     
     from schedules
 )
 

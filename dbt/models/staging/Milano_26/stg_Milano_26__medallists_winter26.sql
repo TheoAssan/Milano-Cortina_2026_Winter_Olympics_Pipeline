@@ -11,7 +11,7 @@ renamed as (
     select        
         cast(medal_code as integer) as medal_code,
         cast(medal as string) as medal,
-        cast(code as integer) as athlete_id,
+        cast(code as integer) as athlete_code,
         cast(name as string) as athlete_name,
         upper(cast(gender as string)) as gender,
         upper(cast(country_code as string)) as country_code,
