@@ -1,6 +1,6 @@
--- fct_medallists.sql
+-- fact_athlete_perf.sql
 with medallists as (
-    select * from {{ ref('int_medallists') }}
+    select * from {{ ref('stg_Milano_26__medallists_winter26') }}
 ),
 
 athletes as (
@@ -8,7 +8,8 @@ athletes as (
         athlete_code,
         athlete_name,
         gender,
-        country_code
+        country_code,
+        country_name
     from {{ ref('dim_athletes') }}
 ),
 
@@ -37,6 +38,7 @@ joined as (
         a.athlete_name,
         a.gender,
         a.country_code,
+        a.country_name,
         m.discipline,
         m.discipline_code,
         d.discipline                as discipline_name,
@@ -52,13 +54,11 @@ joined as (
             ) > 1 then true 
             else false 
         end                         as is_multi_medallist
-
     from medallists m
     left join athletes a    on m.athlete_code = a.athlete_code
     left join discipline d  on m.discipline_code = d.discipline_code
     left join events e      on m.event_name = e.event_name
                            and m.discipline_code = e.discipline_code
-                           and m.gender = e.gender
 )
 
 select * from joined

@@ -5,7 +5,10 @@ with schedules as (
 discipline as (
     select 
         distinct discipline_code,
-        discipline
+        case 
+            when discipline = "Snowboard" then "Snowboarding"
+            else discipline
+        end as discipline
     from schedules
     order by discipline_code asc
 )
