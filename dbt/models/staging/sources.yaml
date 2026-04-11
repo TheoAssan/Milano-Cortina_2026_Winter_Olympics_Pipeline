@@ -1,0 +1,9 @@
+sources:
+  - name: Milano_26
+    database: de-zoomcamp26-487314 # INSERT YOUR BQ NAME Project Name Here
+    schema: olympics_pipeline
+    tables: 
+      - name: schedules_winter26
+      - name: medals_winter26
+      - name: medallists_winter26
+      - name: athletes_winter26
