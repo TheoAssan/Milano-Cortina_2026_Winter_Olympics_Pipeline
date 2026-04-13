@@ -2,14 +2,14 @@
 
 ## Quick Start
 
-Initialize Airflow directories and environment:
+Navigate to airflow directory and Initialize Airflow directories and environment:
 
 ```bash
-mkdir -p ./dags ./logs ./plugins ./config
-echo -e "AIRFLOW_UID=$(id -u)" > .env
+cd ../airflow
+mkdir -p ./logs ./plugins ./config
 ```
 
-> **Note:** If you ran `generate_env.sh` from the Terraform step, the `.env` file already exists with all GCP configuration values. You can skip the manual creation above.
+
 
 ## Overview
 
@@ -31,7 +31,7 @@ All GCP-specific values are read from environment variables (set in `.env`):
 
 | Variable | Description | Default |
 |---|---|---|
-| `GCP_PROJECT_ID` | Your GCP project ID | `de-zoomcamp26-487314` |
+| `GCP_PROJECT_ID` | Your GCP project ID | `xxxx-xxxx-xxxx` |
 | `GCS_BUCKET_NAME` | GCS bucket for data lake | `zc-olympicsdatalake-26` |
 | `GCS_PREFIX` | Path prefix in GCS bucket | `Milano-Cortina-2026` |
 | `BQ_DATASET_ID` | BigQuery dataset name | `olympics_pipeline` |
@@ -65,7 +65,7 @@ docker-compose ps
 
 ### 3. Access the Airflow UI
 
-- **URL:** http://localhost:8080
+- **URL:** http://127.0.0.1:8080
 - **Username:** airflow
 - **Password:** airflow
 
@@ -123,21 +123,13 @@ olympics_pipeline.schedules_winter26
 ### DAG Not Appearing?
 ```bash
 docker-compose down -v  # Clean up
-docker-compose build    # Rebuild
+docker-compose build --no-cache  # Rebuild
 docker-compose up -d    # Start fresh
 ```
 
 ### Check Logs
 ```bash
 docker-compose logs -f airflow-scheduler
-```
-
-### Verify GCS Credentials
-```bash
-docker-compose exec airflow-scheduler \
-  python -c "import google.cloud.storage; \
-  c = google.cloud.storage.Client(); \
-  print('✓ GCS Auth OK')"
 ```
 
 ## File Structure

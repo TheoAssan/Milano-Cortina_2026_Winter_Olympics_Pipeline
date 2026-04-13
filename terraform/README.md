@@ -58,6 +58,7 @@ This guide walks you through setting up and running your Terraform project using
 ### Install Terraform
 
 **Linux / WSL / Codespaces (Debian/Ubuntu):**
+
 ```bash
 sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
 
@@ -68,14 +69,10 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
   https://apt.releases.hashicorp.com $(lsb_release -cs) main" | \
   sudo tee /etc/apt/sources.list.d/hashicorp.list
 
-sudo apt-get update && sudo apt-get install terraform
+sudo apt-get update && sudo apt-get install -y terraform
 ```
 
-**macOS (Homebrew):**
-```bash
-brew tap hashicorp/tap
-brew install hashicorp/tap/terraform
-```
+
 
 **Verify installation:**
 ```bash
@@ -98,9 +95,10 @@ terraform --version
 
 ## 🚀 Step 2: Initialize and Apply Terraform
 
-Ensure you are inside the `terraform/` directory, then run:
+ Run:
 
 ```bash
+cd terraform
 terraform init      # Initializes providers and modules
 terraform plan      # Preview infrastructure changes
 terraform apply     # Create the GCS bucket and BigQuery dataset

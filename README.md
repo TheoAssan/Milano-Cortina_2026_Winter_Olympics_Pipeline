@@ -80,7 +80,7 @@ Kaggle Dataset (CSV)
 
 ## Quick Start
 
-### 1. Provision Infrastructure (Terraform)
+### 1. Provision Infrastructure (Terraform) ([Configuration](terraform/README.MD#-ConfigureProjectVariables))
 
 ```bash
 cd terraform
