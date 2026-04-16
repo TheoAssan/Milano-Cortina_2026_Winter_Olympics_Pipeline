@@ -1,6 +1,6 @@
 sources:
   - name: Milano_26
-    database: "{{ var('gcp_project_id') }}"
+    database: de-zoomcamp26-487314 # INSERT YOUR BQ NAME Project Name Here
     schema: olympics_pipeline
     description: "Raw Milano-Cortina 2026 Winter Olympics data loaded from Kaggle via Airflow into BigQuery"
     tables: 

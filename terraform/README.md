@@ -57,7 +57,7 @@ This guide walks you through setting up and running your Terraform project using
 
 ### Install Terraform
 
-**Linux / WSL / Codespaces (Debian/Ubuntu):**
+**Linux / WSL:**
 
 ```bash
 sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
@@ -71,7 +71,7 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
 
 sudo apt-get update && sudo apt-get install -y terraform
 ```
-
+Note: Codespaces have a different way of installing terraform. 
 
 
 **Verify installation:**

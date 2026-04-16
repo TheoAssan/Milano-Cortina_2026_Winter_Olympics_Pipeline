@@ -73,14 +73,16 @@ Kaggle Dataset (CSV)
 
 ## Prerequisites
 
-- **GCP Account** with a project and service account ([setup guide](terraform/README.MD))
+- **GCP Account** with a project and service account ([setup guide](terraform/README.MD)) | *[ Video Tutorial (Watch first 7 mins only)](https://www.youtube.com/watch?v=Y2ux7gq3Z0o&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=6)*
 - **Docker & Docker Compose** for running Airflow
 - **Terraform** CLI ([install instructions](terraform/README.MD#-prerequisites))
-- **dbt Cloud** account at [cloud.getdbt.com](https://cloud.getdbt.com)
+- **dbt Cloud** account at [cloud.getdbt.com](https://cloud.getdbt.com) | *[📺 Video Tutorial](https://www.youtube.com/watch?v=J0XCDyKiU64&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=32)*
 
 ## Quick Start
 
 ### 1. Provision Infrastructure (Terraform) ([Configuration](terraform/README.MD#-ConfigureProjectVariables))
+
+> **📺 Video Tutorial:** [GCP Account Setup (Watch first 7 mins only)](https://www.youtube.com/watch?v=Y2ux7gq3Z0o&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=6)
 
 ```bash
 cd terraform
@@ -89,6 +91,8 @@ cd terraform
 terraform init
 terraform apply
 ```
+
+> **Note:** See the [Terraform Setup Guide](terraform/README.MD) for more detailed instructions.
 
 ### 2. Generate Environment File
 
@@ -110,7 +114,11 @@ Open **http://localhost:8080** (login: `airflow` / `airflow`) and trigger the DA
 1. **`load_to_gcs`** — Downloads the Kaggle dataset, converts CSVs to Parquet, uploads to GCS
 2. **`gcs_to_bigquery`** — Loads Parquet files from GCS into BigQuery tables
 
+> **Note:** See the [Airflow Setup Guide](airflow/README.md) for more detailed instructions.
+
 ### 4. Transform Data (dbt Cloud)
+
+> **📺 Video Tutorial:** [dbt Cloud Setup Guide](https://www.youtube.com/watch?v=J0XCDyKiU64&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=32)
 
 1. Connect your dbt Cloud project to this repository
 2. Set up the BigQuery connection with your service account key

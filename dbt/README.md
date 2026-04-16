@@ -42,31 +42,23 @@ Mart models build the star schema from staged data.
 
 | Seed | Description |
 |---|---|
-| `ioc_codes` | IOC country code → country name lookup (208 countries) |
+| `ioc_codes` | International Olympics Committee country code → country name lookup (208 countries) |
 
 ## Setup (dbt Cloud)
+\
 
 1. Create a **dbt Cloud** account at [cloud.getdbt.com](https://cloud.getdbt.com)
 2. Create a new project and connect it to your repository
 3. Set the **BigQuery connection** in **Account Settings → Projects → Connections**:
    - Upload your GCP service account key JSON file
-   - Set the project and dataset to match your Terraform configuration
-4. Set the project variable `gcp_project_id` in **Deploy → Environments → Environment Variables**:
-   ```
-   gcp_project_id: your-gcp-project-id
-   ```
+   - Dataset location must match what you originally used as your default location in Terraform. If you did not alter the default location in Terraform, it is likely 'us-central1' in dbt so ensure that it is changed to EU
+   - use 'dbt' as the project sub-directory
+4. In dbt/models/staging/sources.yaml, change the database name to match your GCP project ID
 5. Run the following in the dbt Cloud IDE:
-   ```
-   dbt deps      -- Install dbt_utils package
-   dbt seed      -- Load IOC country codes into BigQuery
-   dbt run       -- Build all staging and mart models
-   dbt test      -- Run all schema tests
-   ```
-   Or run everything at once:
+   
    ```
    dbt build
    ```
-
 ## File Structure
 
 ```

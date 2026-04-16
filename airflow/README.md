@@ -5,7 +5,6 @@
 Navigate to airflow directory and Initialize Airflow directories and environment:
 
 ```bash
-cd ../airflow
 mkdir -p ./logs ./plugins ./config
 ```
 
@@ -40,11 +39,10 @@ These are automatically set if you used `terraform/generate_env.sh`.
 
 ## Building & Running
 
-### 1. Build the Docker Image
+### Start the Docker Image
 
 ```bash
-cd airflow
-docker-compose build
+docker-compose up -d
 ```
 
 This installs all required dependencies including:
@@ -52,24 +50,15 @@ This installs all required dependencies including:
 - Google Cloud Storage and BigQuery clients
 - pandas and pyarrow for CSV → Parquet conversion
 
-### 2. Start Airflow Services
-
-```bash
-docker-compose up -d
-```
-
 Wait for services to be healthy (30-60 seconds):
-```bash
-docker-compose ps
-```
 
-### 3. Access the Airflow UI
+### Access the Airflow UI
 
 - **URL:** http://127.0.0.1:8080
 - **Username:** airflow
 - **Password:** airflow
 
-### 4. Run the Pipeline
+### Run the Pipeline
 
 Run the DAGs **in this order**:
 
