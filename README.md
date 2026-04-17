@@ -1,88 +1,81 @@
-# 🏔️ Milano-Cortina 2026 Winter Olympics — Data Pipeline
+<p align="center">
+  <img src="images/logo.png" alt="Milano Cortina 2026" width="150"/> <br>
+  <h1> Milano-Cortina 2026 Winter Olympics Data Pipeline</h1>
+</p>
 
-An end-to-end data engineering pipeline that ingests, transforms, and models the Milano-Cortina 2026 Winter Olympics dataset for analytics.
+<p align = "center"></p>
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![dbt](https://img.shields.io/badge/dbt-FF694B?style=for-the-badge&logo=dbt&logoColor=white)
+![Airflow](https://img.shields.io/badge/Airflow-444444?style=for-the-badge&logo=apacheairflow&logoColor=auto)
+![GCP](https://img.shields.io/badge/GCP-FFFFFF?style=for-the-badge&logo=googlecloud&logoColor=auto)
+![Terraform](https://img.shields.io/badge/Terraform-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+
+
+
+This project builds a cloud-based end-to-end data pipeline to ingest, transform, and analyze the [Milano-Cortina 2026 Winter Olympics dataset](https://www.kaggle.com/datasets/piterfm/milano-cortina-2026-olympic-winter-games) from Kaggle.
+Using Terraform for infrastructure-as-code, Apache Airflow for orchestration, dbt for transformation, and BigQuery as the data warehouse, the solution establishes a dimensional star schema that enables fast, intuitive analysis. The result is a governed, self-service analytics platform where users can explore Olympic data independently through Looker Studio.
+The analysis answers questions such as:
+- which athletes and countries performed best
+- how medals are distributed across disciplines and gender 
+- and how efficiently countries convert athlete participation into medals.
 
 ## Architecture
 
-```
-Kaggle Dataset (CSV)
-        │
-        ▼
-┌──────────────────┐       ┌──────────────────┐
-│   Airflow DAG 1  │       │   Airflow DAG 2  │
-│   load_to_gcs    │──────▶│  gcs_to_bigquery │
-│  (CSV → Parquet) │       │ (Parquet → BQ)   │
-└──────────────────┘       └──────────────────┘
-        │                          │
-        ▼                          ▼
-   Google Cloud               BigQuery
-   Storage (GCS)             (Raw Tables)
-                                   │
-                                   ▼
-                          ┌─────────────────┐
-                          │    dbt Cloud     │
-                          │ (Staging → Marts)│
-                          └─────────────────┘
-                                   │
-                                   ▼
-                             Star Schema
-                          (dims + facts in BQ)
-```
+<p >
+  <img src="images/arch.png" alt="System Architecture" width="800"/> <br>
+</p>
+
+
 
 ## Tech Stack
 
 | Layer | Tool | Purpose |
 |---|---|---|
-| **Infrastructure** | Terraform | Provisions GCS bucket and BigQuery dataset on GCP |
-| **Orchestration** | Apache Airflow (Docker) | Runs data ingestion DAGs |
+| **Infrastructure** | Terraform | Creates GCS bucket and BigQuery dataset on GCP |
+| **Orchestration** | Apache Airflow (Docker) | Runs DAGs which download the dataset from kaggle,extracts and converts csv to parquet files and loads to Google Cloud Storage|
 | **Data Lake** | Google Cloud Storage | Stores raw Parquet files |
 | **Data Warehouse** | BigQuery | Hosts raw + transformed tables |
 | **Transformation** | dbt Cloud | Builds staging and mart models (star schema) |
+| **Visualization**  | Looker Studio | Presents meaningful data in the form of charts and graphs from transformed dbt models in BigQuery |
 
-## Project Structure
+---
+## Dashboard
+### Country Performances 
+<p >
+  <img src="images/count_perf.png"  width="400"/> 
+  <img src="images/count_filt.png" width="400">
+</p> 
 
-```
-├── terraform/                  # GCP infrastructure as code
-│   ├── main.tf                 # GCS bucket + BigQuery dataset
-│   ├── variables.tf            # Configurable project variables
-│   ├── outputs.tf              # Exports values for downstream tools
-│   ├── generate_env.sh         # Generates airflow/.env from outputs
-│   └── README.MD               # GCP setup + Terraform guide
-│
-├── airflow/                    # Data ingestion pipeline
-│   ├── dags/
-│   │   ├── load_to_gcs.py      # DAG 1: Kaggle → Parquet → GCS
-│   │   └── gcs_to_bq.py        # DAG 2: GCS Parquet → BigQuery
-│   ├── docker-compose.yaml     # Airflow services (LocalExecutor)
-│   ├── dockerfile              # Custom image with dependencies
-│   ├── requirements.txt        # Pinned Python dependencies
-│   └── README.md               # Airflow setup guide
-│
-├── dbt/                        # Data transformation (dbt Cloud)
-│   ├── models/
-│   │   ├── staging/            # Clean + type-cast raw tables
-│   │   └── marts/core/         # Star schema (dims + facts)
-│   ├── seeds/
-│   │   └── ioc_codes.csv       # IOC country code lookup
-│   ├── dbt_project.yml         # Project config
-│   └── README.md               # dbt Cloud setup guide
-│
-├── Makefile                    # Pipeline execution commands
-└── README.md                   # This file
-```
+Country Performances analyzes the performances of the participating countries: 
+- **Geographic Location** : shows where the country is located on the world map.
+- **Medal standings** : ranks the top 10 nations by medals won using a stacked bar which shows the number of gold, silver and bronze medals won. When a country is selected, it displays the medals won for that singular selected country.
+- **Total medals**,**Number of participating countries** : are dynamic scorecards which show the total value of what they represent when unfiltered. When a country is selected, the re-aggregate the values for that singular country selected.
+- **Medal Distribution By Discipline** : by default indicates the total number of medals awarded per discipline, when a country is selected, it shows the disciplines in which the medals were obtained.
+
+### Athlete Performances
+
+<p >
+  <img src="images/ath_perf.png" width="400"/> 
+  <img src="images/ath_filt.png" width="400"/>
+</p>
+
+- **Medallists Leaderboard**: Displays the total number of medals,names,countries,gender and discipline of athletes who won medals **only**.This is sorted in descending order. When a country is selected, it displays the medallists and their corresponding data for the selected country.
+- **Podium Profile** : Displays the type of medals won by the athletes
+- **Number of participating athletes,Gender Doughnut**: By default displays the total number of athletes who participated in the winter olympics segregated by gender.Upon selecting a country, it displays the total number of athletes from that country also segregated by gender.
+- **Performance Participation**: Plots The number of athletes presented by each country against the number of medals they won and find the average of both metrics. The metric of the bubble is conversion rate. It is determined by how efficiently a country's athlete participation translated to medal wins. So high number of athletes participation with relatively low medal returns gives a lower conversion rate etc. 
 
 ## Prerequisites
 
-- **GCP Account** with a project and service account ([setup guide](terraform/README.MD)) | *[ Video Tutorial (Watch first 7 mins only)](https://www.youtube.com/watch?v=Y2ux7gq3Z0o&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=6)*
+- **GCP Account** with a project and service account  | *[ Video Tutorial](https://www.youtube.com/watch?v=Y2ux7gq3Z0o&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=6)*
 - **Docker & Docker Compose** for running Airflow
-- **Terraform** CLI ([install instructions](terraform/README.MD#-prerequisites))
-- **dbt Cloud** account at [cloud.getdbt.com](https://cloud.getdbt.com) | *[📺 Video Tutorial](https://www.youtube.com/watch?v=J0XCDyKiU64&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=32)*
+- **Terraform** CLI 
+- **dbt Cloud** account | *[ Video Tutorial](https://www.youtube.com/watch?v=J0XCDyKiU64&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=32)*
 
 ## Quick Start
 
 ### 1. Provision Infrastructure (Terraform) ([Configuration](terraform/README.MD#-ConfigureProjectVariables))
-
-> **📺 Video Tutorial:** [GCP Account Setup (Watch first 7 mins only)](https://www.youtube.com/watch?v=Y2ux7gq3Z0o&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=6)
 
 ```bash
 cd terraform
@@ -103,51 +96,33 @@ bash generate_env.sh
 
 ### 3. Start Airflow & Run DAGs
 
+> **Note:** See the [Airflow Setup Guide](airflow/README.md) for more detailed instructions.
+
 ```bash
 cd ../airflow
 docker-compose build
 docker-compose up -d
 ```
 
-Open **http://localhost:8080** (login: `airflow` / `airflow`) and trigger the DAGs in order:
+Forward **http://127.0.0.1:8080** (login: `airflow` / `airflow`) and trigger the DAGs in order:
 
 1. **`load_to_gcs`** — Downloads the Kaggle dataset, converts CSVs to Parquet, uploads to GCS
 2. **`gcs_to_bigquery`** — Loads Parquet files from GCS into BigQuery tables
 
-> **Note:** See the [Airflow Setup Guide](airflow/README.md) for more detailed instructions.
+
 
 ### 4. Transform Data (dbt Cloud)
 
-> **📺 Video Tutorial:** [dbt Cloud Setup Guide](https://www.youtube.com/watch?v=J0XCDyKiU64&list=PL3MmuxUbc_hJed7dXYoJw8DoCuVHhGEQb&index=32)
+See [dbt/README.md](dbt/README.md) for detailed setup instructions.
 
 1. Connect your dbt Cloud project to this repository
 2. Set up the BigQuery connection with your service account key
 3. Set the `gcp_project_id` variable in your dbt Cloud environment
 4. Run:
+
    ```
-   dbt deps → dbt seed → dbt run → dbt test
+   dbt build
    ```
-
-See [dbt/README.md](dbt/README.md) for detailed setup instructions.
-
-## Makefile Commands
-
-Run `make help` to see all available commands:
-
-```
-  terraform-init      Initialize Terraform providers
-  terraform-plan      Preview infrastructure changes
-  terraform-apply     Create GCS bucket and BigQuery dataset on GCP
-  terraform-destroy   Tear down all GCP resources
-  generate-env        Generate airflow/.env from Terraform outputs
-  airflow-build       Build the custom Airflow Docker image
-  airflow-up          Start all Airflow services (detached)
-  airflow-down        Stop all Airflow services
-  airflow-reset       Full reset — stop, remove volumes, rebuild, start
-  airflow-logs        Tail scheduler logs
-```
-
-## Data Model
 
 The dbt layer transforms raw BigQuery tables into a star schema:
 
@@ -155,4 +130,4 @@ The dbt layer transforms raw BigQuery tables into a star schema:
 
 **Facts:** `fact_athlete_perf`, `fact_country_perf`, `fact_discipline`
 
-See [dbt/README.md](dbt/README.md) for full model documentation.
+### 5. Visualization 
